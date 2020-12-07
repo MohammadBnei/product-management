@@ -18,7 +18,7 @@ let sse
 
 export default function RelatedElements () {
     const classes = useStyles()
-    const choosenElement = useSelector(({ choosen }) => choosen.element)
+    const choosenElement = useSelector(({ product }) => product.element)
     const [relatedElements, setRelatedElements] = useState({})
 
     useEffect(() => {

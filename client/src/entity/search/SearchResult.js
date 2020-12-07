@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Button, Grid, makeStyles, Paper, Typography } from '@material-ui/core'
 import { doTheSearch } from './actions'
 import { useDispatch, useSelector } from 'react-redux'
-import { setElement } from '../choosen/actions'
+import { setElement } from '../product/actions'
 
 const useStyles = makeStyles(theme => ({
     root: {

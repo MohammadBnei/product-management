@@ -15,21 +15,18 @@ import { Link as RouterLink } from 'react-router-dom'
 
 import VpnKeyIcon from '@material-ui/icons/VpnKey'
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
-import SearchBar from '../entity/search/SearchBar'
-import SearchResult from '../entity/search/SearchResult'
-import Choosen from '../entity/choosen/Choosen'
+// import SearchBar from '../entity/search/SearchBar'
+// import SearchResult from '../entity/search/SearchResult'
 import { CircularProgress } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
-import { LOGOUT } from '../redux/actionTypes'
-// import Deposits from './Deposits';
-// import Orders from './Orders';
+import { LOGOUT } from '../redux/constants'
 
-function Copyright () {
+function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
             <Link color="inherit" href="https://material-ui.com/">
-        Star Wars Rebels Alliance
+                Star Wars Rebels Alliance
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -88,9 +85,9 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-export default function Home () {
+export default function Home() {
     const classes = useStyles()
-    const { loader, authenticated } = useSelector(({ meta, auth }) => ({ loader: meta.loading, authenticated: auth.authenticated }))
+    const { loading, user } = useSelector(({ loading, user }) => ({ loading, user }))
     const dispatch = useDispatch()
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
 
@@ -99,7 +96,7 @@ export default function Home () {
             <CssBaseline />
             <AppBar position="absolute" className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
-                    {authenticated ? (<IconButton
+                    {user ? (<IconButton
                         edge="start"
                         color="inherit"
                         onClick={() => dispatch({ type: LOGOUT })}
@@ -116,10 +113,10 @@ export default function Home () {
                     </IconButton>)
                     }
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Search System {authenticated && ' (Connected)'}
+                        Search System
                     </Typography>
                     <IconButton color="inherit">
-                        {loader !== 0 && <CircularProgress color="inherit" />}
+                        {loading && <CircularProgress color="inherit" />}
                     </IconButton>
                 </Toolbar>
             </AppBar>
@@ -129,19 +126,19 @@ export default function Home () {
                     <Grid container spacing={3}>
                         <Grid item xs={12} >
                             <Paper className={classes.searchBar}>
-                                <SearchBar />
+                                {/* <SearchBar /> */}
                             </Paper>
                         </Grid>
                         {/* Recent Deposits */}
                         <Grid item xs={6} >
                             <Paper className={fixedHeightPaper}>
-                                <SearchResult />
+                                {/* <SearchResult /> */}
                             </Paper>
                         </Grid>
                         {/* Recent Orders */}
                         <Grid item xs={6} >
                             <Paper className={fixedHeightPaper}>
-                                <Choosen />
+                                {/* <Product /> */}
                             </Paper>
                         </Grid>
                     </Grid>

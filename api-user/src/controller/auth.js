@@ -1,18 +1,14 @@
 const { generateToken } = require('../jwt')
+const { User } = require('../model')
+
 
 module.exports = {
     signUp: async (req, res) => {
         try {
-            const { user, contact } = req.body
-            userValidator.verifyUser(user)
-            contactValidator.verifyContactOnCreateWithUser(contact)
+            const user = req.body
 
             const newUser = await User.create(user)
-            newUser.getContact()
-                .then(c => c.update(contact))
-
-            sendCreationMail(contact)
-
+            
             res.send({ success: true })
 
         } catch (error) {
@@ -27,14 +23,17 @@ module.exports = {
         try {
             const { username, password } = req.body
 
-            console.log({ username });
+            let user = await User.findOne({ where: { username } })
 
-            if (username !== user.username) {
-                throw new Error('User not found')
-            }
-            if (password !== user.password) {
-                throw new Error('Wrong password')
-            }
+            if (!user) return res.status(404).send({
+                message: `User ${username} not found`
+            })
+
+            const passwordCheck = await user.verifyPassword(password)
+
+            if (!passwordCheck) return res.status(404).send({
+                message: 'Wrong password'
+            })
 
             const token = generateToken(user.username)
 
@@ -50,8 +49,6 @@ module.exports = {
     jwtSignIn: async (req, res) => {
         try {
             const { user } = req
-
-            const contact = await user.getContact()
 
             res.send({
                 user: {

@@ -27,6 +27,8 @@ module.exports = {
                 error: result.errors[0].message
             })
         }
+
+        next()
     }
 
 }

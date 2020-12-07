@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Snackbar } from '@material-ui/core'
+import { Backdrop, CircularProgress, Snackbar } from '@material-ui/core'
 import Alert from '@material-ui/lab/Alert'
 import { useSelector } from 'react-redux'
 
-export default function Utils () {
+export default function Utils() {
     // eslint-disable-next-line max-len
-    const { errors } = useSelector(({ meta }) => ({ errors: meta.errors }))
+    const { loading, messages } = useSelector(({ loading, messages, user }) => ({ loading, messages, user }))
     const [snackbars, setSnackbars] = useState([])
 
     useEffect(() => {
         setSnackbars((s) => [...s, true])
-    }, [errors])
+    }, [messages])
 
     const handleClose = useCallback((id) => (event, reason) => {
         if (reason === 'clickaway') {
@@ -24,19 +24,22 @@ export default function Utils () {
 
     return (
         <>
-            {errors.map((message, index) => (
+            {messages.map((message, index) => (
                 <Snackbar
-                    key={index}
+                    key={message.id}
                     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                     open={snackbars[index]}
                     autoHideDuration={5000}
                     onClose={handleClose(index)}
                 >
-                    <Alert onClose={handleClose(index)} severity="error">
-                        {message}
+                    <Alert onClose={handleClose(index)} severity={message.type}>
+                        {message.message}
                     </Alert>
                 </Snackbar>
             ))}
+            <Backdrop open={loading}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </>
     )
 }

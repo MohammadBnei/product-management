@@ -4,7 +4,7 @@ import {
     SET_RESOURCE_LIST,
     SET_SELECTION,
     SET_SEARCH_RESULT
-} from '../../redux/actionTypes'
+} from '../../redux/constants'
 
 export default function (state = {
     term: '',

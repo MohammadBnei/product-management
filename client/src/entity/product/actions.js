@@ -6,7 +6,7 @@ import {
     SET_CHOOSEN_ELEMENT,
     SET_OTHER_ELEMENT,
     REMOVE_OTHER_ELEMENT
-} from '../../redux/actionTypes'
+} from '../../redux/constants'
 
 export function setElement (payload) {
     return async (dispatch) => {

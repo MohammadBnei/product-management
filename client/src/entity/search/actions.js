@@ -1,5 +1,5 @@
 import axios from '../../conf'
-import { ERROR, SET_RESOURCE, SET_RESOURCE_LIST, SET_SEARCH_RESULT, SET_SELECTION, SET_TERM } from '../../redux/actionTypes'
+import { ERROR, SET_RESOURCE, SET_RESOURCE_LIST, SET_SEARCH_RESULT, SET_SELECTION, SET_TERM } from '../../redux/constants'
 
 export function fetchOptions () {
     return (dispatch) => {

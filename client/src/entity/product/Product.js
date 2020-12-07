@@ -6,8 +6,8 @@ import { setElementFromRoute } from './actions'
 import Element from './component/Element'
 import RelatedElements from './RelatedElements'
 
-export default function Choosen () {
-    const { element, authenticated } = useSelector(({ choosen, auth }) => ({ element: choosen.element, authenticated: auth.authenticated }))
+export default function Product () {
+    const { element, authenticated } = useSelector(({ product, auth }) => ({ element: product.element, authenticated: auth.authenticated }))
     const search = useLocation().search
     const dispatch = useDispatch()
 

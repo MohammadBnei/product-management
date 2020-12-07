@@ -1,14 +1,14 @@
 import axios from 'axios'
-import { END_LOADING, ERROR, LOADING } from '../redux/actionTypes';
+import { DONE_LOADING, ERROR, LOADING } from '../redux/constants';
 import store from '../redux/store';
 
-export const SWAPI_API_URI = process.env.SWAPI_API_URI || 'https://localhost/api/swapi/'
+export const PRODUCT_API_URI = process.env.PRODUCT_API_URI || 'https://localhost/api/product/'
 export const EVENTS_API_URI = process.env.EVENTS_API_URI || 'https://localhost/api/events/'
-export const AUTH_URL = process.env.AUTH_URL || 'https://localhost/api/auth/'
+export const USER_URL = process.env.USER_URL || 'https://localhost/api/user/'
 
 // axios.defaults.headers.post['Content-Type'] ='application/x-www-form-urlencoded;charset=utf-8';
 // axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-axios.defaults.baseURL = SWAPI_API_URI;
+axios.defaults.baseURL = PRODUCT_API_URI;
 
 axios.interceptors.request.use((req) => {
     store.dispatch({type: LOADING, payload: `${req.method} ${req.url}`})
@@ -17,17 +17,24 @@ axios.interceptors.request.use((req) => {
 })
 
 axios.interceptors.response.use((res) => {
-    store.dispatch({type: END_LOADING, payload: res.data.json})
+    store.dispatch({type: DONE_LOADING, payload: res.data.json})
 
     return res
 }, err => {
-    store.dispatch({type: END_LOADING})
+    store.dispatch({type: DONE_LOADING})
 
     if (err.response)
-        store.dispatch({type: ERROR, payload: err.response.data?.message || 'Something went wrong'})
+        store.dispatch({type: ERROR, payload: err.response.message || 'Something went wrong'})
 })
 
-export default axios
+
+
+export default axios.create({
+
+    validateStatus: function (status) {
+        return status == 200;
+    }
+});
 
 /**
  * Returns [resource, id]

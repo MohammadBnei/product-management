@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt')
 
 module.exports = (sequelize, Sequelize) => {
-    const User = sequelize.define('marchand', {
+    const User = sequelize.define('user', {
         // attributes
         username: {
             type: Sequelize.STRING,

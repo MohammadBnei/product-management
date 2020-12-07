@@ -1,7 +1,30 @@
-import { ERROR } from '../actionTypes'
+import {
+    ERROR, SUCCESS_MESSAGE, INFO_MESSAGE,
+} from '../constants'
 
-export function newError (message) {
-    return dispatch => {
-        dispatch({ type: ERROR, payload: message })
-    }
-}
+/**
+ * Sends success message
+ * @param {*} message
+ */
+export const sendSuccessMsg = (message) => ({
+    type: SUCCESS_MESSAGE,
+    payload: message,
+})
+
+/**
+ * Sends Info message
+ * @param {*} message
+ */
+export const sendInfoMsg = (message) => ({
+    type: INFO_MESSAGE,
+    payload: message,
+})
+
+/**
+ * Sends error message
+ * @param {*} message
+ */
+export const newError = (message) => ({
+    type: ERROR,
+    payload: message,
+})
