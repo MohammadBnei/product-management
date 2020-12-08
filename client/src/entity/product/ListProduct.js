@@ -80,7 +80,7 @@ const useSSE = (dispatch) => {
         sse.onerror = (e) => {
             console.log(e);
             if (sse.readyState == 2) {
-                setTimeout(initSSE, 1000);
+                setTimeout(initSSE, 5000);
             }
         };
 
