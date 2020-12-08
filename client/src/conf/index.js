@@ -22,9 +22,7 @@ axios.interceptors.request.use((req) => {
     const { token } = store.getState().user
 
     if (token)
-        axios.defaults.headers.common['Authorization'] = token;
-
-    console.log({ req });
+        req.headers['Authorization'] = token
 
     return req
 })
