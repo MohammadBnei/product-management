@@ -1,15 +1,15 @@
 import { SET_PRODUCT, SET_PRODUCTS } from "../../redux/constants"
 
 export default function (state = {
-    product: null,
+    // product: null,
     products: []
 }, { type, payload }) {
     switch (type) {
-    case SET_PRODUCT:
-        return {
-            ...state,
-            product: payload
-        }
+    // case SET_PRODUCT:
+    //     return {
+    //         ...state,
+    //         product: payload
+    //     }
     case SET_PRODUCTS:
         return {
             ...state,

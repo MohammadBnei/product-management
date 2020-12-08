@@ -11,7 +11,7 @@ import SignIn from './entity/auth/SignIn'
 import SignUp from './entity/auth/SignUp'
 import Home from './views/Home'
 import Utils from './entity/Utils'
-import { storageSignIn } from './entity/auth/action'
+import { storageSignIn } from './entity/auth/actions'
 
 function App() {
     const dispatch = useDispatch()

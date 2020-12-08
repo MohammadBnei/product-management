@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import is from 'is_js'
 import ProductDetail from './ProductDetail'
 import { DONE_LOADING, LOADING } from '../../redux/constants'
-import { modifyProduct } from './actions'
+import { getProducts, modifyProduct } from './actions'
+import { setProducts } from './actions'
 
 const useStyles = makeStyles((theme) => ({
     heading: {
@@ -17,25 +18,20 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
+let sse = null
+
 export default function ListProduct() {
     const classes = useStyles()
     const dispatch = useDispatch()
-    const token = useSelector(({ user }) => user.token)
-    const [products, setProducts] = useSSE(dispatch)
+    const products = useSelector(({ product }) => product.products)
     const [expanded, setExpanded] = useState(false)
 
     useEffect(() => {
-        if (!token) return
+        dispatch(getProducts())
+        initSSE(dispatch)
 
-        (async () => {
-            try {
-                const data = (await axios.get(PRODUCT_API_URI)).data
-                setProducts(data)
-            } catch (error) { }
-        })()
-    }, [token])
-
-    useEffect(() => { console.log({ products }) }, [products])
+        return () => sse?.readyState < 2 && sse.close()
+    }, [])
 
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
@@ -71,55 +67,28 @@ export default function ListProduct() {
 }
 
 
-const useSSE = (dispatch) => {
-    const [products, setProducts] = useState([])
-    let sse
-    const initSSE = () => {
-        sse = new EventSource(EVENTS_API_URI)
+const initSSE = (dispatch) => {
+    sse = new EventSource(EVENTS_API_URI)
 
-        sse.onerror = (e) => {
-            console.log(e);
-            if (sse.readyState == 2) {
-                setTimeout(initSSE, 5000);
+    sse.onerror = (e) => {
+        if (sse.readyState == 2) {
+            setTimeout(initSSE, 5000);
+        }
+    };
+
+    sse.onmessage = (message) => {
+        try {
+            const data = JSON.parse(message.data)
+            if (data.end === true) {
+                console.log('Stream Ended')
+                sse.close()
+                return
             }
-        };
 
-        sse.onmessage = (message) => {
-            dispatch({ type: LOADING })
-            try {
-                const data = JSON.parse(message.data)
-                if (data.end === true) {
-                    console.log('Stream Ended')
-                    sse.close()
-                    return
-                }
+            dispatch(setProducts(data))
 
-                setProducts(currentState => {
-                    let index = currentState.findIndex(p => p._id === data._id)
-
-                    if (index === -1)
-                        return [...currentState, data]
-
-
-                    if (data.removed) {
-                        currentState.splice(index, 1)
-                    } else {
-                        currentState.splice(index, 1, data)
-                    }
-
-                    return [...currentState]
-                })
-
-
-            } catch (error) {
-                console.log(error)
-            } finally {
-                dispatch({ type: DONE_LOADING })
-            }
+        } catch (error) {
+            console.log(error)
         }
     }
-
-    initSSE()
-
-    return [products, setProducts]
 }
