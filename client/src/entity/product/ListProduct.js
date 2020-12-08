@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Accordion, AccordionDetails, AccordionSummary, Grid, makeStyles, Typography } from '@material-ui/core'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import axios, { EVENTS_API_URI, PRODUCT_API_URI } from '../../conf'
+import { EVENTS_API_URI } from '../../conf'
 import { useDispatch, useSelector } from 'react-redux'
 import is from 'is_js'
 import ProductDetail from './ProductDetail'
-import { DONE_LOADING, LOADING } from '../../redux/constants'
 import { getProducts, modifyProduct } from './actions'
 import { setProducts } from './actions'
 
@@ -70,7 +69,7 @@ export default function ListProduct() {
 const initSSE = (dispatch) => {
     sse = new EventSource(EVENTS_API_URI)
 
-    sse.onerror = (e) => {
+    sse.onerror = () => {
         if (sse.readyState == 2) {
             setTimeout(initSSE, 5000);
         }
