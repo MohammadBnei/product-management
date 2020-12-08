@@ -4,7 +4,7 @@ import {
 } from '../../redux/constants'
 
 export default function (state = {
-    authenticated: !!localStorage.getItem('auth_jwt_token')
+    authenticated: !!localStorage.getItem('jwt')
 }, action) {
     switch (action.type) {
     case AUTH_USER:

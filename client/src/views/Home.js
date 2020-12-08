@@ -15,11 +15,11 @@ import { Link as RouterLink } from 'react-router-dom'
 
 import VpnKeyIcon from '@material-ui/icons/VpnKey'
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
-// import SearchBar from '../entity/search/SearchBar'
 // import SearchResult from '../entity/search/SearchResult'
 import { CircularProgress } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
 import { LOGOUT } from '../redux/constants'
+import CreateProduct from '../entity/product/component/CreateProduct'
 
 function Copyright() {
     return (
@@ -126,7 +126,7 @@ export default function Home() {
                     <Grid container spacing={3}>
                         <Grid item xs={12} >
                             <Paper className={classes.searchBar}>
-                                {/* <SearchBar /> */}
+                                <CreateProduct />
                             </Paper>
                         </Grid>
                         {/* Recent Deposits */}

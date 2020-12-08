@@ -6,10 +6,11 @@ module.exports = {
     signUp: async (req, res) => {
         try {
             const user = req.body
+            console.log({ user, body: req.body });
 
             const newUser = await User.create(user)
-            
-            res.send({ success: true })
+
+            res.send({ user: newUser })
 
         } catch (error) {
             console.error(error)
@@ -23,7 +24,7 @@ module.exports = {
         try {
             const { username, password } = req.body
 
-            let user = await User.findOne({ where: { username } })
+            const user = await User.findOne({ where: { username } })
 
             if (!user) return res.status(404).send({
                 message: `User ${username} not found`
@@ -35,7 +36,7 @@ module.exports = {
                 message: 'Wrong password'
             })
 
-            const token = generateToken(user.username)
+            const token = generateToken(user.id)
 
             res.send({ token, user })
 
@@ -48,15 +49,11 @@ module.exports = {
 
     jwtSignIn: async (req, res) => {
         try {
-            const { user } = req
+            const { userId } = req
 
-            res.send({
-                user: {
-                    ...user.get({
-                        plain: true
-                    }),
-                }
-            })
+            const user = await User.findOne({ where: { id: userId } })
+
+            res.send({ user })
 
         } catch (error) {
             res.status(500).send({

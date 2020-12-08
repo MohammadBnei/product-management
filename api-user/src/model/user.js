@@ -28,5 +28,13 @@ module.exports = (sequelize, Sequelize) => {
         return bcrypt.compare(enteredPassword, this.password)
     }
 
+    User.prototype.toJSON = function () {
+        const user = {...this.get()}
+
+
+        delete user.password
+        return user
+    }
+
     return User
 }

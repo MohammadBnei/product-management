@@ -22,8 +22,8 @@ module.exports = {
         const result = validator.validate(user, userSchema)
 
         if (result.errors?.length) {
-            console.log({validation: result.errors});
-            res.status(400).send({
+            console.log({validation: result.errors, user});
+            return res.status(400).send({
                 error: result.errors[0].message
             })
         }

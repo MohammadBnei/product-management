@@ -20,6 +20,8 @@ module.exports = {
 
             if (!userId) throw new Error('Not a valid token')
 
+            req.userId = userId
+
             next()
         } catch (error) {
             return res.status(404).send({

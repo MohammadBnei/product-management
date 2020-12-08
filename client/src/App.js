@@ -1,17 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
     Switch,
     Route
 } from 'react-router-dom'
 
 import './App.css'
+import { useDispatch } from 'react-redux'
 
 import SignIn from './entity/auth/SignIn'
 import SignUp from './entity/auth/SignUp'
 import Home from './views/Home'
 import Utils from './entity/Utils'
+import { storageSignIn } from './entity/auth/action'
 
 function App() {
+    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(storageSignIn())
+    }, [])
+
     return (
         <>
             <Utils />

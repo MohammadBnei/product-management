@@ -4,8 +4,8 @@ import { newError, sendInfoMsg, sendSuccessMsg } from '../../redux/actions/error
 import { LOGOUT, SET_USER, SUCCESS_MESSAGE } from '../../redux/constants'
 import store from '../../redux/store'
 
-if (localStorage.getItem('auth_jwt_token')) {
-    axios.defaults.headers.common.Authorization = localStorage.getItem('auth_jwt_token')
+if (localStorage.getItem('jwt')) {
+    axios.defaults.headers.common.Authorization = localStorage.getItem('jwt')
 }
 
 /**
@@ -18,29 +18,19 @@ export const setUser = (payload) => ({
 })
 
 export const signIn = (credentials) => async (dispatch) => {
-    const data = await fetchUser({
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials),
-    })
-
-    if (!data) return
-
-    const {
-        user, token,
-    } = data
-
-    window.localStorage.setItem('jwt', token)
-
-    dispatch(sendSuccessMsg('Sucessfully Connected'))
-    dispatch(setUser(user))
+    try {
+        const { user, token } = (await axios.post(USER_URL + 'signin', credentials)).data
+        
+        window.localStorage.setItem('jwt', token)
+        
+        dispatch(sendSuccessMsg('Sucessfully Connected'))
+        dispatch(setUser(user))
+    } catch (error) {}
 }
 
 export const signUp = (credentials) => async (dispatch) => {
     try {
-        await axios.post(USER_URL + 'signup', {
-            body: JSON.stringify(credentials),
-        })
+        const user = (await axios.post(USER_URL + 'signup', credentials)).data
 
         dispatch({
             type: SUCCESS_MESSAGE,
@@ -67,9 +57,8 @@ export const storageSignIn = () => async (dispatch) => {
     if (!localStorage.getItem('jwt')) return
 
     try {
-        const { user, token } = await fetchUser()
+        const { user } = await fetchUser()
         dispatch(setUser(user))
-        window.localStorage.setItem('jwt', token)
     } catch (error) {
         window.localStorage.removeItem('jwt')
     }
