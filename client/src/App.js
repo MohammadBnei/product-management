@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom'
 
 import './App.css'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import SignIn from './entity/auth/SignIn'
 import SignUp from './entity/auth/SignUp'

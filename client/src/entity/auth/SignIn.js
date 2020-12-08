@@ -38,8 +38,6 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn() {
     const classes = useStyles()
 
-    const user = useSelector(({ user }) => user)
-
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
@@ -51,10 +49,6 @@ export default function SignIn() {
 
         dispatch(signIn({ username, password }))
     }
-
-    useEffect(() => {
-        if (user) history.push('/')
-    }, [user])
 
     return (
         <Container component="main" maxWidth="xs">
@@ -73,7 +67,7 @@ export default function SignIn() {
                         required
                         fullWidth
                         id="username"
-                        label="Society Name"
+                        label="Username"
                         name="username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}

@@ -1,30 +1,27 @@
-import {
-    REMOVE_OTHER_ELEMENT,
-    SET_CHOOSEN_ELEMENT as SET_CHOSEN_ELEMENT, SET_OTHER_ELEMENT
-} from '../../redux/constants'
+import { SET_PRODUCT, SET_PRODUCTS } from "../../redux/constants"
 
 export default function (state = {
-    element: null,
-    elements: []
+    product: null,
+    products: []
 }, { type, payload }) {
     switch (type) {
-    case SET_CHOSEN_ELEMENT:
+    case SET_PRODUCT:
         return {
             ...state,
-            element: payload
+            product: payload
         }
-    case SET_OTHER_ELEMENT:
+    case SET_PRODUCTS:
         return {
             ...state,
-            elements: [payload, ...state.elements]
+            products: payload
         }
-    case REMOVE_OTHER_ELEMENT:
-        const index = state.elements.findIndex(payload)
-        if (index === -1) { return state }
-        return {
-            ...state,
-            elements: state.elements.splice(index, 1)
-        }
+    // case REMOVE_OTHER_ELEMENT:
+    //     const index = state.elements.findIndex(payload)
+    //     if (index === -1) { return state }
+    //     return {
+    //         ...state,
+    //         elements: state.elements.splice(index, 1)
+    //     }
     default:
         return state
     }

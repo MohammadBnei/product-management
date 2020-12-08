@@ -1,12 +1,8 @@
 import { routerActions } from 'connected-react-router'
 import axios, { USER_URL } from '../../conf'
-import { newError, sendInfoMsg, sendSuccessMsg } from '../../redux/actions/error'
-import { LOGOUT, SET_USER, SUCCESS_MESSAGE } from '../../redux/constants'
+import { newError, sendInfoMsg, sendSuccessMsg } from '../../redux/actions/message'
+import { LOGOUT, SET_USER, SUCCESS_MESSAGE, AUTHENTICATE, SET_TOKEN, REMOVE_TOKEN } from '../../redux/constants'
 import store from '../../redux/store'
-
-if (localStorage.getItem('jwt')) {
-    axios.defaults.headers.common.Authorization = localStorage.getItem('jwt')
-}
 
 /**
  * Sets user
@@ -20,23 +16,27 @@ export const setUser = (payload) => ({
 export const signIn = (credentials) => async (dispatch) => {
     try {
         const { user, token } = (await axios.post(USER_URL + 'signin', credentials)).data
-        
+
         window.localStorage.setItem('jwt', token)
-        
+        dispatch({ type: SET_TOKEN, payload: token })
+
+
         dispatch(sendSuccessMsg('Sucessfully Connected'))
+        dispatch({ type: AUTHENTICATE })
         dispatch(setUser(user))
-    } catch (error) {}
+        dispatch(routerActions.push('/'))
+
+    } catch (error) { }
 }
 
 export const signUp = (credentials) => async (dispatch) => {
     try {
-        const user = (await axios.post(USER_URL + 'signup', credentials)).data
+        await axios.post(USER_URL + 'signup', credentials)
 
         dispatch({
             type: SUCCESS_MESSAGE,
             payload: `Successfully created ${credentials.username} account`,
         })
-
         dispatch(routerActions.push('/signin'))
     } catch (error) {
         console.log(error);
@@ -45,6 +45,7 @@ export const signUp = (credentials) => async (dispatch) => {
 
 export const signOut = () => (dispatch) => {
     window.localStorage.removeItem('jwt')
+    dispatch({ type: REMOVE_TOKEN })
 
     dispatch(sendInfoMsg('Disconnected'))
 
@@ -54,26 +55,26 @@ export const signOut = () => (dispatch) => {
 }
 
 export const storageSignIn = () => async (dispatch) => {
-    if (!localStorage.getItem('jwt')) return
+    const token = localStorage.getItem('jwt')
+    if (!token) return
 
+    
     try {
-        const { user } = await fetchUser()
+        const { user } = await fetchUser({
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
+        dispatch({ type: SET_TOKEN, payload: token })
+        dispatch({ type: AUTHENTICATE })
         dispatch(setUser(user))
     } catch (error) {
         window.localStorage.removeItem('jwt')
+        dispatch({ type: REMOVE_TOKEN })
     }
 }
 
 export const fetchUser = async (options = {}) => {
-    const token = localStorage.getItem('jwt')
-
-    if (token) {
-        options.headers = {
-            ...options.headers,
-            Authorization: `Bearer ${token}`,
-        }
-    }
-
     try {
         const data = (await axios.get(USER_URL + 'signin', options)).data
 

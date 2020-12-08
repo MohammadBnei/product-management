@@ -1,16 +1,14 @@
 import {
-    AUTH_USER,
+    AUTHENTICATE,
     LOGOUT
 } from '../../redux/constants'
 
-export default function (state = {
-    authenticated: !!localStorage.getItem('jwt')
-}, action) {
+export default function (state = false, action) {
     switch (action.type) {
-    case AUTH_USER:
-        return { ...state, authenticated: true }
+    case AUTHENTICATE:
+        return true
     case LOGOUT:
-        return { ...state, authenticated: false }
+        return false
     default:
         return state
     }

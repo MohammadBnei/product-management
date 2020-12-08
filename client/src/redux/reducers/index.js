@@ -1,8 +1,7 @@
 import { combineReducers } from 'redux'
 import { connectRouter } from 'connected-react-router'
 
-import auth from '../../entity/auth/reducer'
-import search from '../../entity/search/reducer'
+import authenticated from '../../entity/auth/reducer'
 import product from '../../entity/product/reducer'
 
 import * as constants from '../constants'
@@ -32,7 +31,7 @@ const messageReducer = (state = [], { type, payload }) => {
             messages.push({
                 id: now,
                 message: payload,
-                type: 'warn',
+                type: 'warning',
             })
             return messages
         case constants.INFO_MESSAGE:
@@ -49,15 +48,19 @@ const messageReducer = (state = [], { type, payload }) => {
     }
 }
 
-const userReducer = (state = null, { type, payload }) => {
+const userReducer = (state = {
+    user: null,
+    token: localStorage.getItem('jwt')
+}, { type, payload }) => {
     switch (type) {
         case constants.SET_USER:
-            return {
-                ...payload,
-            }
+            return { ...state, user: payload }
         case constants.USER_LOGOUT:
-            return null
-
+            return { ...state, user: null }
+        case constants.SET_TOKEN:
+            return { ...state, token: payload }
+        case constants.REMOVE_TOKEN:
+            return { ...state, token: null }
         default:
             return state
     }
@@ -79,8 +82,7 @@ const createRootReducer = history => combineReducers({
     messages: messageReducer,
     user: userReducer,
     loading: loadingReducer,
-    auth,
-    search,
+    authenticated,
     product,
 })
 

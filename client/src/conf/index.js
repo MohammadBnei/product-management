@@ -6,32 +6,36 @@ export const PRODUCT_API_URI = process.env.PRODUCT_API_URI || 'https://localhost
 export const EVENTS_API_URI = process.env.EVENTS_API_URI || 'https://localhost/api/events/'
 export const USER_URL = process.env.USER_URL || 'https://localhost/api/user/'
 
-Axios.defaults.headers.post['Content-Type'] ='application/json;charset=utf-8';
+Axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
 // Axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 Axios.defaults.baseURL = PRODUCT_API_URI;
 
-Axios.interceptors.request.use((req) => {
-    store.dispatch({type: LOADING, payload: `${req.method} ${req.url}`})
-
-    return req
-})
-
-Axios.interceptors.response.use((res) => {
-    store.dispatch({type: DONE_LOADING, payload: res.data.json})
-
-    return res
-}, err => {
-    store.dispatch({type: DONE_LOADING})
-
-    if (err.response)
-        store.dispatch({type: ERROR, payload: err.response.data?.message || err.response.message || 'Something went wrong'})
-})
-
 const axios = Axios.create({
-
     validateStatus: function (status) {
         return status == 200;
     }
 });
+
+axios.interceptors.request.use((req) => {
+    store.dispatch({ type: LOADING, payload: `${req.method} ${req.url}` })
+
+    const { token } = store.getState().user
+    
+    if (token)
+        axios.defaults.headers.common.Authorization = token
+
+    return req
+})
+
+axios.interceptors.response.use((res) => {
+    store.dispatch({ type: DONE_LOADING, payload: res.data.json })
+
+    return res
+}, err => {
+    store.dispatch({ type: DONE_LOADING })
+
+    if (err.response)
+        store.dispatch({ type: ERROR, payload: err.response.data?.message || err.response.message || 'Something went wrong' })
+})
 
 export default axios

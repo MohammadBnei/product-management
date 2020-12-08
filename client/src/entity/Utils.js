@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 
 export default function Utils() {
     // eslint-disable-next-line max-len
-    const { loading, messages } = useSelector(({ loading, messages, user }) => ({ loading, messages, user }))
+    const { messages } = useSelector(({ loading, messages, user }) => ({ messages, user }))
     const [snackbars, setSnackbars] = useState([])
 
     useEffect(() => {
@@ -29,7 +29,7 @@ export default function Utils() {
                     key={message.id}
                     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                     open={snackbars[index]}
-                    autoHideDuration={5000}
+                    autoHideDuration={3000}
                     onClose={handleClose(index)}
                 >
                     <Alert onClose={handleClose(index)} severity={message.type}>
@@ -37,9 +37,6 @@ export default function Utils() {
                     </Alert>
                 </Snackbar>
             ))}
-            <Backdrop open={loading}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
         </>
     )
 }

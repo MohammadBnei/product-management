@@ -6,7 +6,6 @@ module.exports = {
     signUp: async (req, res) => {
         try {
             const user = req.body
-            console.log({ user, body: req.body });
 
             const newUser = await User.create(user)
 

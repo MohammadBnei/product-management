@@ -15,11 +15,11 @@ import { Link as RouterLink } from 'react-router-dom'
 
 import VpnKeyIcon from '@material-ui/icons/VpnKey'
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
-// import SearchResult from '../entity/search/SearchResult'
 import { CircularProgress } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
-import { LOGOUT } from '../redux/constants'
-import CreateProduct from '../entity/product/component/CreateProduct'
+import ProductDetail from '../entity/product/ProductDetail'
+import ListProduct from '../entity/product/ListProduct'
+import { signOut } from '../entity/auth/action'
 
 function Copyright() {
     return (
@@ -59,7 +59,10 @@ const useStyles = makeStyles((theme) => ({
         display: 'none'
     },
     title: {
-        flexGrow: 1
+        flexGrow: 1,
+    },
+    signInText: {
+        padding: '10px'
     },
     appBarSpacer: theme.mixins.toolbar,
     content: {
@@ -87,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home() {
     const classes = useStyles()
-    const { loading, user } = useSelector(({ loading, user }) => ({ loading, user }))
+    const { loading, authenticated } = useSelector(({ loading, user, authenticated }) => ({ loading, user, authenticated }))
     const dispatch = useDispatch()
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
 
@@ -96,10 +99,10 @@ export default function Home() {
             <CssBaseline />
             <AppBar position="absolute" className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
-                    {user ? (<IconButton
+                    {authenticated ? (<IconButton
                         edge="start"
                         color="inherit"
-                        onClick={() => dispatch({ type: LOGOUT })}
+                        onClick={() => dispatch(signOut())}
                         className={clsx(classes.menuButton)}
                     >
                         <MeetingRoomIcon />
@@ -122,25 +125,28 @@ export default function Home() {
             </AppBar>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
-                <Container maxWidth="lg" className={classes.container}>
+                <Container maxWidth={false} className={classes.container}>
                     <Grid container spacing={3}>
-                        <Grid item xs={12} >
-                            <Paper className={classes.searchBar}>
-                                <CreateProduct />
-                            </Paper>
-                        </Grid>
-                        {/* Recent Deposits */}
-                        <Grid item xs={6} >
-                            <Paper className={fixedHeightPaper}>
-                                {/* <SearchResult /> */}
-                            </Paper>
-                        </Grid>
-                        {/* Recent Orders */}
-                        <Grid item xs={6} >
-                            <Paper className={fixedHeightPaper}>
-                                {/* <Product /> */}
-                            </Paper>
-                        </Grid>
+                        {authenticated ? (<>
+                            <Grid item xs={12} >
+                                <Paper className={classes.searchBar}>
+                                    <ProductDetail />
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={12} >
+                                <Paper className={fixedHeightPaper}>
+                                    <ListProduct />
+                                </Paper>
+                            </Grid>
+                        </>) : (
+                                <Grid item xs={12} >
+                                    <Paper className={classes.searchBar}>
+                                        <Typography className={classes.signInText} variant="h2" gutterBottom>
+                                            You are not signed in.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
                     </Grid>
                     <Box pt={4}>
                         <Copyright />

@@ -1,66 +1,36 @@
-import { routerActions } from 'connected-react-router'
-import is from 'is_js'
-import axios, { extractParamsFromUrl } from '../../conf'
+import axios, { PRODUCT_API_URI } from '../../conf'
 import {
-    ERROR,
-    SET_CHOOSEN_ELEMENT,
-    SET_OTHER_ELEMENT,
-    REMOVE_OTHER_ELEMENT
-} from '../../redux/constants'
+    sendSuccessMsg
+} from '../../redux/actions/message'
+import { SET_PRODUCT, SET_PRODUCTS } from '../../redux/constants'
 
-export function setElement (payload) {
+export function createProduct(payload) {
     return async (dispatch) => {
-        let data = payload
-        if (is.url(payload)) {
-            try {
-                data = (await searchElement(payload)).data
-            } catch (error) {
-                console.log(error)
-                dispatch({ type: ERROR, payload: error.response })
-            }
-        }
+        try {
+            const data = (await axios.post(PRODUCT_API_URI, payload)).data
+            dispatch(sendSuccessMsg(`Product ${data.name} created !`))
+        } catch (error) {}
 
-        dispatch({ type: SET_CHOOSEN_ELEMENT, payload: data })
-        const [resource, id] = extractParamsFromUrl(data.url)
-        dispatch(routerActions.push({
-            pathname: '/',
-            search: `?resource=${resource}&id=${id}`
-        }))
     }
 }
 
-export function setElementFromRoute ({ resource, id }) {
-    return (dispatch) => {
-        axios
-            .get('/element/' + id, { params: { resource } })
-            .then(res => {
-                dispatch({ type: SET_CHOOSEN_ELEMENT, payload: res.data })
-            })
-            .catch(error => {
-                console.log(error)
-                dispatch({ type: ERROR, payload: error.response })
-            })
+export function modifyProduct(payload) {
+    return async (dispatch) => {
+        try {
+            const data = (await axios.post(PRODUCT_API_URI + payload._id, payload)).data
+            dispatch(sendSuccessMsg(`Product ${data.name} updated !`))
+            console.log({data});
+        } catch (error) {}
+
     }
 }
 
-export function setOtherElement (url) {
-    return (dispatch) => {
-        searchElement(url)
-            .then(res => {
-                dispatch({ type: SET_OTHER_ELEMENT, payload: res.data })
-            })
-            .catch(error => {
-                console.log(error)
-                dispatch({ type: ERROR, payload: error.response })
-            })
+export function deleteProduct(payload) {
+    return async (dispatch) => {
+        try {
+            await axios.delete(PRODUCT_API_URI + payload)
+            dispatch(sendSuccessMsg(`Product removed !`))
+        } catch (error) {}
+
     }
 }
-
-export function removeOtherElement (url) {
-    return (dispatch) => {
-        dispatch({ type: REMOVE_OTHER_ELEMENT, payload: url })
-    }
-}
-
-export const searchElement = (url) => axios
-    .get('/element', { params: { url } })
