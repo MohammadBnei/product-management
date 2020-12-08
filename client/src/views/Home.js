@@ -19,7 +19,7 @@ import { CircularProgress } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
 import ProductDetail from '../entity/product/ProductDetail'
 import ListProduct from '../entity/product/ListProduct'
-import { signOut } from '../entity/auth/action'
+import { signOut } from '../entity/auth/actions'
 
 function Copyright() {
     return (

@@ -20,9 +20,11 @@ axios.interceptors.request.use((req) => {
     store.dispatch({ type: LOADING, payload: `${req.method} ${req.url}` })
 
     const { token } = store.getState().user
-    
+
     if (token)
-        axios.defaults.headers.common.Authorization = token
+        axios.defaults.headers.common['Authorization'] = token;
+
+    console.log({ req });
 
     return req
 })
