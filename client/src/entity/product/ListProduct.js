@@ -7,6 +7,7 @@ import is from 'is_js'
 import ProductDetail from './ProductDetail'
 import { getProducts, modifyProduct } from './actions'
 import { setProducts } from './actions'
+import store from '../../redux/store'
 
 const useStyles = makeStyles((theme) => ({
     heading: {
@@ -27,7 +28,7 @@ export default function ListProduct() {
 
     useEffect(() => {
         dispatch(getProducts())
-        initSSE(dispatch)
+        initSSE()
 
         return () => sse?.readyState < 2 && sse.close()
     }, [])
@@ -66,7 +67,7 @@ export default function ListProduct() {
 }
 
 
-const initSSE = (dispatch) => {
+const initSSE = () => {
     sse = new EventSource(EVENTS_API_URI)
 
     sse.onerror = () => {
@@ -84,7 +85,7 @@ const initSSE = (dispatch) => {
                 return
             }
 
-            dispatch(setProducts(data))
+            store.dispatch(setProducts(data))
 
         } catch (error) {
             console.log(error)
