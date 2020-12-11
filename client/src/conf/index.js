@@ -2,9 +2,9 @@ import * as Axios from 'axios'
 import { DONE_LOADING, ERROR, LOADING } from '../redux/constants';
 import store from '../redux/store';
 
-export const PRODUCT_API_URI = process.env.PRODUCT_API_URI || 'https://localhost/api/product/'
-export const EVENTS_API_URI = process.env.EVENTS_API_URI || 'https://localhost/api/events/'
-export const USER_URL = process.env.USER_URL || 'https://localhost/api/user/'
+export const PRODUCT_API_URI = process.env.PRODUCT_API_URI || '/api/product/'
+export const EVENTS_API_URI = process.env.EVENTS_API_URI || '/api/events/'
+export const USER_URL = process.env.USER_URL || '/api/user/'
 
 Axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
 // Axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
