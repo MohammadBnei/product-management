@@ -8,7 +8,7 @@ export const USER_URL = process.env.USER_URL || '/api/user/'
 
 Axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
 // Axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-Axios.defaults.baseURL = PRODUCT_API_URI;
+// Axios.defaults.baseURL = PRODUCT_API_URI;
 
 const axios = Axios.create({
     validateStatus: function (status) {
