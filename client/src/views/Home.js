@@ -26,7 +26,7 @@ function Copyright() {
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
             <Link color="inherit" href="https://material-ui.com/">
-                Star Wars Rebels Alliance
+                Product Management
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -116,7 +116,7 @@ export default function Home() {
                     </IconButton>)
                     }
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                        Search System
+                        Product Management
                     </Typography>
                     <IconButton color="inherit">
                         {loading && <CircularProgress color="inherit" />}
